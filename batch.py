@@ -288,6 +288,29 @@ def setRunCfg(b, type='hpc_sge'):
 if __name__ == '__main__':
 
     b = assr_batch_grid('data/v34_batch25/trial_2142/trial_2142_cfg.json')
+    initCfg = b.initCfg
+
+    ndict = {}
+    for keys, item in initCfg.items():
+        if keys == 'wmat':
+            break
+        if isinstance(keys, tuple):
+            nndict = ndict
+            for key in keys[:-1]:
+                if key in nndict:
+                    nndict = nndict[key]
+                else:
+                    nndict[key] = {}
+                    nndict = nndict[key]
+            nndict[keys[-1]] = item
+        else:
+            ndict[keys] = item
+
+    json.dump(ndict, open('initCfg2.json', 'w'), indent=4)
+
+    json.dump(initCfg['wmat'], open('thalwmat.json', 'w'), indent=4)
+
+
     # b = evolRates('data/v34_batch25/trial_2142/trial_2142_cfg.json')
     #
     # b.batchLabel = 'SamParams0814b'
